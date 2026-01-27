@@ -1,0 +1,56 @@
+# Python
+**/.ipynb_checkpoints/
+**/_experiment[?s]/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+tmp/
+wheels/
+*.log
+*.egg-info/
+*.egg
+.installed.cfg
+.coverage
+.pytest_cache/
+
+# Node JS
+node_modules/
+
+# Virtual environments
+**/venv/
+**/ENV/
+**/env/
+**/.venv/
+
+# Local .env files
+.env
+!.env.example
+!.env.template
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AWS
+.aws/
+.aws-sam/
+samconfig.toml
