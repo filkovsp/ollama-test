@@ -1,10 +1,22 @@
 ﻿# Get started with local LM Studio as LLM Provider 
 
-## 1. Install LM Studio
-Download and install from https://lmstudio.ai/download
-When that's done, download and start LLM, for example "meta-llama-3.1-8b-instruct".
+## 1. Ollama binaries:
+Download and install from https://ollama.com/download
 
-## 2. Setup local Python project
+## 2. Download model(s)
+- Gemini gemma3: 
+```bash
+ollama pull gemma3:27b
+```
+- GPT-OSS:
+```bash
+ollama pull gpt-oss:20b
+
+# or 
+ollama pull gpt-oss:120b
+```
+
+## 3. Setup local Python project
 1. Install UV from https://docs.astral.sh/uv/getting-started/installation/
 2. Restart your Terminals, VS Code IDE, etc.. and run command in console:
 ```bash
@@ -24,7 +36,9 @@ python -m ensurepip
 ```
 3. Install  Filesystem MCP Server
 ```bash
-npm install -g @modelcontextprotocol/server-filesystem
+npm ci
+
+# make sure you've got NodeJS v20+ installed
 ```
 4. run python application:
 ```bash

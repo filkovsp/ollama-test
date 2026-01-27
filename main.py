@@ -1,20 +1,23 @@
-import json
+import os
 import asyncio
 import traceback
+from pathlib import Path
+
 from mcp_use import MCPClient
 from mcp_use.client.session import MCPSession
+
 from langchain_ollama import ChatOllama
-from mcp_use.agents.adapters import LangChainAdapter
 from langchain_core.tools import BaseTool
-
 from langchain.agents import create_agent
-from langchain.messages import HumanMessage, ToolCall
-from mcp.types import Tool
+from langchain.messages import HumanMessage
+from langchain_mcp_adapters.tools import load_mcp_tools
 
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 load_dotenv()  # Loads from .env file
 
 async def main() -> None:
+    root_path = str(Path("~/Documents").expanduser().resolve())
+    
     # follow documentation and create MCP Server config.
     # https://mcp-use.com/docs/python/client/client-configuration
     # https://mcp-use.com/docs/python/client/direct-tool-calls
@@ -33,7 +36,8 @@ async def main() -> None:
     # we need to create multiple clients with different configs
     filesystem_config = {
         "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "D:/temp"]
+        "args": ["-y", "@modelcontextprotocol/server-filesystem", root_path],
+        "cwd": os.getcwd(),
     }
     
     filesystem_client = MCPClient()
@@ -46,15 +50,12 @@ async def main() -> None:
         # there is an internal bug in MCPSession, 
         # before calling session.list_tools() we MUST add some timeout 
         # to allow seesion initialize and connect to MCP Server
-        await asyncio.sleep(0.25) 
-        
-        # https://mcp-use.com/docs/python/agent/building-custom-agents
-        adapter = LangChainAdapter()
+        await asyncio.sleep(0.25)
         
         # suggested in mcp-use documentation approach above doesn't really work
-        # a workaround is as below:
-        filesystem_mcp_tools: list[Tool] = await filesystem_session.list_tools()
-        filesystem_tools: list[BaseTool] = [adapter._convert_tool(mcp_tool=tool, connector=filesystem_session.connector) for tool in filesystem_mcp_tools]
+        # a workaround is load_mcp_tools which comes with https://reference.langchain.com/python/langchain_mcp_adapters
+        await filesystem_session.list_tools() # need to make this call, otherwise the below is failing...
+        filesystem_tools: list[BaseTool] = await load_mcp_tools(filesystem_session.connector.client_session)
         
         # https://docs.langchain.com/oss/python/langchain/models
         ollama_model = ChatOllama(
@@ -76,9 +77,9 @@ async def main() -> None:
             # https://docs.langchain.com/oss/python/langchain/structured-output
         )
         
-        prompt = """
+        prompt = f"""
             Using tools available to you perform the following task:
-            1. navigate to the repository at D:/temp
+            1. navigate to the directory at {root_path}
             2. find existing file in it named `hello.txt` with the content 'Hello!'
             3. Modify the content of `hello.txt` to 'Hello, World!'
             if the file does not exist, create it with the content 'Hello, World!'
