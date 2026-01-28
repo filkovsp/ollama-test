@@ -16,4 +16,6 @@ dependencies = [
     "langchain-core==1.2.*",
     "langchain-ollama==1.0.*",
     "langchain-mcp-adapters==0.2.*",
+    "pypdfium2==5.3.*",
+    "pillow==12.1.*",
 ]
