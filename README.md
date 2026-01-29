@@ -38,7 +38,7 @@ python -m ensurepip
 ```bash
 npm ci
 
-# make sure you've got NodeJS v20+ installed
+# make sure Node JS v20+ is installed
 ```
 4. run python application:
 ```bash

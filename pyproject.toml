@@ -10,7 +10,6 @@ dependencies = [
     "python-dotenv>=1.2.0",
     "mcp_server_git==2025.12.*",
     "mcp[cli]==1.23.*",
-    "mcp-use==1.6.*",
     "ollama==0.6.*",
     "langchain==1.2.*",
     "langchain-core==1.2.*",
